@@ -7,4 +7,5 @@
 - [Quick Start](quick_start.md)
   - [Установка необходимых пакетов](quick_start.md#установка-необходимых-пакетов)
   - [Работа со средами](quick_start.md#работа-со-средами)
-- [Robot Sescription](robot_description.md)
+- [Robot Description](robot_description.md#robot-description)
+- [Robot in Gazebo](robot_gazebo.md#robot-in-Gazebo)

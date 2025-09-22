@@ -6,7 +6,7 @@
   - [Gazebo Harmonic](#gazebo-harmonic)
   - [Nav2](#nav2)
 - [Работа со средами](#работа-со-средами)
-  - [ROS 2](#ros-2)
+  - [ROS 2](#ros2)
   - [Gazebo Harmonic](#gazebo-harmonic-1)
 
 ---
@@ -88,7 +88,7 @@ ros2 launch nav2_bringup tb3_simulation_launch.py headless:=False
   ros2 launch <package-name> <launch-file> <param1>:=<value1> <param2>:=<value2>
   ```
 
-#### Работа с с запущенными узлами
+#### Отладка работающей системы
 - Информация об узле:  
   ```bash
   ros2 node info /<node-name>
