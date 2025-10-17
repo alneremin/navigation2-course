@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ============================= -->
+  <!--     WHEEL OF YANDEX ROVER     -->
+  <!-- ============================= -->
+  <xacro:macro name="wheel_macro" params="prefix parent name xyz rpy side">
+
+    <xacro:if value="${side == 'left'}">
+    <xacro:property name="wheel_rpy_visual" value="0 0 0"/>
+    <xacro:property name="wheel_xyz_visual" value="0.0 0.0 0.0"/>
+    <xacro:property name="offset" value="0.1 0 0"/>
+    </xacro:if>
+
+    <xacro:if value="${side == 'right'}">
+    <xacro:property name="wheel_rpy_visual" value="0 0 0"/>
+    <xacro:property name="wheel_xyz_visual" value="0 0 0"/>
+    <xacro:property name="offset" value="-0.1 0 0"/>
+
+    </xacro:if>
+
+
+    <xacro:property name="wheel_radius" value="0.1"/>
+    <xacro:property name="wheel_length" value="0.1"/>
+    <xacro:property name="wheel_mass" value="3.0"/>
+
+    <!-- Wheel link -->
+    <link name="${prefix}${name}">
+      <visual>
+        <geometry>
+          <mesh filename="file://$(find ya_rover_description)/meshes/wheels/wheel_final.stl" scale="1.0 1.0 1.0"/>
+          <!-- <cylinder length="0.11" radius="0.15"/> -->
+        </geometry>
+
+        <origin xyz="${wheel_xyz_visual}" rpy="${wheel_rpy_visual}"/>
+        <material name="color_black"/>
+      </visual>
+              <!-- <origin xyz="0.401 -0.25 0.281" rpy="${wheel_rpy_visual}"/> -->
+
+        <!-- <origin xyz="0.34 -0.3 0.15" rpy="${wheel_rpy_visual}"/> -->
+
+      <collision>
+        <geometry>
+        <!-- <mesh filename="file://$(find ya_rover_description)/meshes/wheels/wheel2.stl" scale="1.2 1.2 1.2"/> -->
+          <cylinder length="0.13" radius="0.24"/>
+        </geometry>
+        <origin xyz="${offset}" rpy="0 ${pi/2} 0"/>
+        <material name="color_black"/>
+      </collision>
+
+      <inertial>
+        <mass value="1.0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="0.01" iyy="0.01" izz="0.01" ixy="0.0" ixz="0.0" iyz="0.0"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}joint_${name}" type="revolute">
+      <parent link="${parent}"/>
+      <child link="${prefix}${name}"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+      <axis xyz="1 0 0"/>
+      <limit effort="10" velocity="10" lower="-1000" upper="1000"/>
+      <mass value="${wheel_mass}"/>
+      <inertia ixx="${(3*wheel_radius**2+wheel_length**2)*wheel_mass*1/12}" ixy="0.0" ixz="0.0"
+                        iyy="${(3*wheel_radius**2+wheel_length**2)*wheel_mass*1/12}" iyz="0.0"
+                        izz="${(wheel_mass*wheel_radius**2)*1/2}"/>
+      <limit effort="100.0" lower="-0.5" upper="0.5" velocity="10" />
+      <dynamics damping="0.2"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>

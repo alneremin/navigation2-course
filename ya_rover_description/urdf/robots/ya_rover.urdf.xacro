@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot name="ya_rover" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:arg name="robot_name" default="ya_rover"/>
+
+    <xacro:include filename="$(find ya_rover_description)/urdf/components/plugins/gz_control.urdf.xacro" />
+    <xacro:include filename="$(find ya_rover_description)/urdf/components/utils/materials.urdf.xacro"/>
+    <xacro:include filename="$(find ya_rover_description)/urdf/components/base/base.urdf.xacro" />
+    <xacro:include filename="$(find ya_rover_description)/urdf/components/wheels/wheel.urdf.xacro" />
+    <xacro:include filename="$(find ya_rover_description)/urdf/components/sensors/lidar.urdf.xacro" />
+    <xacro:include filename="$(find ya_rover_description)/urdf/components/plugins/control.urdf.xacro" />
+    <xacro:include filename="$(find ya_rover_description)/urdf/components/plugins/transmission.urdf.xacro" />
+
+
+
+
+    <xacro:base/>
+
+    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_front_left" xyz="0.55 -0.6 -0.43" rpy="0 0 0" side="left"/>
+    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_front_right" xyz="-0.55001 -0.6 -0.43" rpy="0 0 0" side="right"/>
+    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_middle_left" xyz="0.55 0.053 -0.43" rpy="0 0 0" side="left"/>
+    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_middle_right" xyz="-0.55001 0.053 -0.43" rpy="0 0 0" side="right"/>
+    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_rear_left" xyz="0.55 0.733 -0.43" rpy="0 0 0" side="left"/>
+    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_rear_right" xyz="-0.55001 0.733 -0.43" rpy="0 0 0" side="right"/>
+
+    <xacro:lidar prefix="lidar" parent="base_link">
+        <origin xyz="0.0 -0.61 0.81" rpy="0.0 0.0 0.0"/>
+    </xacro:lidar>
+    <xacro:control>
+        <transmissions>
+            <xacro:transmission joint="joint_wheel_front_left"/>
+            <xacro:transmission joint="joint_wheel_front_right"/>
+            <xacro:transmission joint="joint_wheel_middle_left"/>
+            <xacro:transmission joint="joint_wheel_middle_right"/>
+            <xacro:transmission joint="joint_wheel_rear_left"/>
+            <xacro:transmission joint="joint_wheel_rear_right"/>           
+        </transmissions>
+    </xacro:control>
+
+  <xacro:gz_control/>
+
+</robot>
