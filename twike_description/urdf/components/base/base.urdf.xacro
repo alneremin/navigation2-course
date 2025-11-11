@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <xacro:property name="base_length" value="0.5"/>
+    <xacro:property name="base_thickness" value="0.3"/>
+    <xacro:property name="base_height" value="0.3"/>
+
+    <xacro:property name="clearance" value="0.05"/>
+
+    <xacro:macro name="base">
+    
+        <link name="base_footprint"/>
+
+        <link name="base_link">
+            <visual>
+                <geometry>
+                    <box size="${base_length} ${base_thickness} ${base_height}"/>
+                </geometry>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0.0 0.0 0.0" />
+                <geometry>
+                    <box size="${base_length} ${base_thickness} ${base_height}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <mass value="5.0"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+            </inertial>
+        </link>
+
+        <joint name="base_link_joint" type="fixed">
+            <origin xyz="0.0 0.0 ${base_height/2 + clearance}" rpy="0.0 0.0 0.0"/>
+            <parent link="base_footprint"/>
+            <child link="base_link"/>
+        </joint>
+
+    </xacro:macro>
+</robot>
