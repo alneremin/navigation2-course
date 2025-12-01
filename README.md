@@ -11,3 +11,4 @@
 - [Robot Description](robot_description.md#robot-description)
 - [Robot in Gazebo](robot_gazebo.md#robot-in-Gazebo)
 - [Robot Control](robot_control.md#robot-control)
+- [Robot Navigation](robot_navigation.md#robot-navigation)
