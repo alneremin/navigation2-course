@@ -1,4 +1,4 @@
-### Домашнее задание №1
+# Домашнее задание №1
 Перед запуском добавить дополнительные пакеты: 
 
 ## twist_mux
@@ -39,4 +39,16 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/di
 tf-преобразования:
 ```bash
 ros2 run rqt_tf_tree rqt_tf_tree
+```
+
+# Домашнее задание №2
+
+## запуск симуляции
+```bash
+ros2 launch edubot_navigation spawn_robot.launch.py
+```
+
+## запуск навигации и локализации
+```bash
+ros2 launch edubot_navigation navigation.launch.py
 ```
