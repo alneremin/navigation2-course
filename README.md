@@ -52,3 +52,15 @@ ros2 launch edubot_navigation spawn_robot.launch.py
 ```bash
 ros2 launch edubot_navigation navigation.launch.py
 ```
+
+# Домашнее задание №3
+
+## запуск симуляции
+```bash
+ros2 launch edubot_navigation spawn_robot.launch.py
+```
+
+## запуск навигации и локализации
+```bash
+ros2 launch edubot_navigation navigation.launch.py
+```
