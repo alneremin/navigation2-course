@@ -14,15 +14,15 @@
       <visual>
         <geometry>
           <!-- <box size="1.2 0.6 0.5"/> -->
-          <mesh filename="file://$(find ya_rover_description)/meshes/wheels/base_orig.dae" scale="1.0 1.0 1.0"/>
+          <mesh filename="file://$(find ya_rover_description)/meshes/wheels/base_orig.dae" scale="0.5 0.5 0.5"/>
         </geometry>
-        <origin xyz="0.0 -0.07 -0.5" rpy="0 0 0"/>
+        <origin xyz="0.0 -0.07 -0.5" rpy="0 0 ${pi/2}"/>
       </visual>
       <collision>
         <geometry>
-          <box size="0.9 1.7 1.0"/>
+          <box size="0.68 0.95 0.365"/>
         </geometry>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="-0.03 -0.06 -0.12" rpy="0 0 ${pi/2}"/>
       </collision>
       <inertial>
         <mass value="1.0"/>

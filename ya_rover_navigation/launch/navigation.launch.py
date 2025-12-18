@@ -1,0 +1,101 @@
+from launch import LaunchDescription
+from launch.substitutions import LaunchConfiguration
+from launch.actions import DeclareLaunchArgument
+from ament_index_python.packages import get_package_share_directory
+from launch_ros.descriptions import ParameterFile
+from nav2_common.launch import RewrittenYaml
+from launch_ros.actions import Node
+
+import os
+
+def generate_launch_description():
+
+    # namespace = LaunchConfiguration('namespace')
+    params_file = LaunchConfiguration('params_file')
+
+    remappings = [('/tf', 'tf'), ('/tf_static', 'tf_static')]
+    
+    # configured_params = ParameterFile(
+    #     RewrittenYaml(
+    #         source_file=params_file,
+    #         root_key=namespace,
+    #         param_rewrites={},
+    #         convert_types=True,
+    #     ),
+    #     allow_substs=True,
+    # )
+
+    declare_namespace_cmd = DeclareLaunchArgument(
+        name='namespace',
+        default_value='bmx',
+        description='Top-level namespace'
+    )
+
+    declare_params_file_cmd = DeclareLaunchArgument(
+        name='params_file',
+        default_value=os.path.join(get_package_share_directory("ya_rover_navigation"), "config", "new_navigation.yaml"),
+        description='Localization pamareters in yaml file to load'
+    )
+
+    bt_navigator_cmd = Node(
+        package='nav2_bt_navigator',
+        executable='bt_navigator',
+        name='bt_navigator',
+        output='screen',
+        # namespace=namespace,
+        parameters=[params_file],
+        arguments=[],
+        remappings=remappings,
+    )
+
+    lifecycle_manager_cmd = Node(
+        package='nav2_lifecycle_manager',
+        executable='lifecycle_manager',
+        name='lifecycle_manager_navigation',
+        output='screen',
+        # namespace=namespace,
+        arguments=[],
+        parameters=[params_file],
+    )
+    planner_cmd = Node(
+        package='nav2_planner',
+        executable='planner_server',
+        name='planner_server',
+        output='screen',
+        # namespace=namespace,
+        parameters=[params_file],
+        arguments=[],
+        remappings=remappings,
+    )
+
+    controller_cmd = Node(
+        package='nav2_controller',
+        executable='controller_server',
+        name='controller_server',
+        output='screen',
+        # namespace=namespace,
+        parameters=[params_file],
+        arguments=[],
+        # remappings=remappings + [('cmd_vel', 'diff_drive_controller/reference')],
+    )
+    behavior_cmd = Node(
+        package='nav2_behaviors',
+        executable='behavior_server',
+        name='behavior_server',
+        output='screen',
+        # namespace=namespace,
+        parameters=[params_file],
+        arguments=[],
+        # remappings=remappings + [('cmd_vel', 'diff_drive_controller/reference')],
+    )
+
+    ld = LaunchDescription()
+
+    ld.add_action(declare_namespace_cmd)
+    ld.add_action(declare_params_file_cmd)
+    ld.add_action(bt_navigator_cmd)
+    ld.add_action(planner_cmd)
+    ld.add_action(controller_cmd)
+    ld.add_action(behavior_cmd)
+    ld.add_action(lifecycle_manager_cmd)
+    return ld

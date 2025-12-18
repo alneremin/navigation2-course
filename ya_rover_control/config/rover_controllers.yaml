@@ -28,13 +28,18 @@ diff_drive_controller:
     wheel_separation: 0.7
     wheel_radius: 0.2
     publish_rate: 50.0
-    base_frame_id: base_link
+    base_frame_id: base_footprint
     odom_frame_id: odom
     enable_odom_tf: true
-    use_stamped_vel: false
+    use_stamped_vel: true
     cmd_vel_timeout: 0.25
     linear:
       x:
+        has_velocity_limits: true
+        max_velocity: 1.0
+        has_acceleration_limits: true
+        max_acceleration: 0.5
+      y:
         has_velocity_limits: true
         max_velocity: 1.0
         has_acceleration_limits: true

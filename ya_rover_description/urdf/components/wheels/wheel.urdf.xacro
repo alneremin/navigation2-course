@@ -7,15 +7,18 @@
   <xacro:macro name="wheel_macro" params="prefix parent name xyz rpy side">
 
     <xacro:if value="${side == 'left'}">
-    <xacro:property name="wheel_rpy_visual" value="0 0 0"/>
+    <xacro:property name="wheel_rpy_visual" value="0 0 ${pi/2}"/>
     <xacro:property name="wheel_xyz_visual" value="0.0 0.0 0.0"/>
-    <xacro:property name="offset" value="0.1 0 0"/>
+    <xacro:property name="offset" value="0.0 0 0"/>
+    <xacro:property name="axx" value=" 0 1 0"/>
+
     </xacro:if>
 
     <xacro:if value="${side == 'right'}">
-    <xacro:property name="wheel_rpy_visual" value="0 0 0"/>
+    <xacro:property name="wheel_rpy_visual" value="0 0 ${pi/2}"/>
     <xacro:property name="wheel_xyz_visual" value="0 0 0"/>
-    <xacro:property name="offset" value="-0.1 0 0"/>
+    <xacro:property name="offset" value="-0.0 0 0"/>
+    <xacro:property name="axx" value=" 0 -1 0"/>
 
     </xacro:if>
 
@@ -28,7 +31,7 @@
     <link name="${prefix}${name}">
       <visual>
         <geometry>
-          <mesh filename="file://$(find ya_rover_description)/meshes/wheels/wheel_final.stl" scale="1.0 1.0 1.0"/>
+          <mesh filename="file://$(find ya_rover_description)/meshes/wheels/wheel_final.stl" scale="0.5 0.5 0.5"/>
           <!-- <cylinder length="0.11" radius="0.15"/> -->
         </geometry>
 
@@ -42,9 +45,9 @@
       <collision>
         <geometry>
         <!-- <mesh filename="file://$(find ya_rover_description)/meshes/wheels/wheel2.stl" scale="1.2 1.2 1.2"/> -->
-          <cylinder length="0.13" radius="0.24"/>
+          <cylinder length="0.065" radius="0.12"/>
         </geometry>
-        <origin xyz="${offset}" rpy="0 ${pi/2} 0"/>
+        <origin xyz="${offset}" rpy="0 ${pi/2} ${pi/2}"/>
         <material name="color_black"/>
       </collision>
 
@@ -59,7 +62,7 @@
       <parent link="${parent}"/>
       <child link="${prefix}${name}"/>
       <origin xyz="${xyz}" rpy="${rpy}"/>
-      <axis xyz="1 0 0"/>
+      <axis xyz="${axx}"/>
       <limit effort="10" velocity="10" lower="-1000" upper="1000"/>
       <mass value="${wheel_mass}"/>
       <inertia ixx="${(3*wheel_radius**2+wheel_length**2)*wheel_mass*1/12}" ixy="0.0" ixz="0.0"

@@ -22,7 +22,7 @@ def generate_launch_description():
 
 	declare_world_path_cmd = DeclareLaunchArgument(
 		name="world_path",
-		default_value=os.path.join(get_package_share_directory("ya_rover_gazebo"), "worlds", "empty_world.world"),
+		default_value=os.path.join(get_package_share_directory("ya_rover_gazebo"), "worlds", "empty.world"),
 		description="Gazebo world"
 	)
 
@@ -53,13 +53,13 @@ def generate_launch_description():
 
 	declare_x_cmd = DeclareLaunchArgument(
 		name="x",
-		default_value="0.0",
+		default_value="2.0",
 		description="Robot X axis"
 	)
 
 	declare_y_cmd = DeclareLaunchArgument(
 		name="y",
-		default_value="0.0",
+		default_value="2.0",
 		description="Robot Y axis"
 	)
 

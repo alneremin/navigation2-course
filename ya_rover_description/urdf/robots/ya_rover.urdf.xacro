@@ -15,15 +15,15 @@
 
     <xacro:base/>
 
-    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_front_left" xyz="0.55 -0.6 -0.43" rpy="0 0 0" side="left"/>
-    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_front_right" xyz="-0.55001 -0.6 -0.43" rpy="0 0 0" side="right"/>
-    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_middle_left" xyz="0.55 0.053 -0.43" rpy="0 0 0" side="left"/>
-    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_middle_right" xyz="-0.55001 0.053 -0.43" rpy="0 0 0" side="right"/>
-    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_rear_left" xyz="0.55 0.733 -0.43" rpy="0 0 0" side="left"/>
-    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_rear_right" xyz="-0.55001 0.733 -0.43" rpy="0 0 0" side="right"/>
+    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_front_left" xyz="0.26 0.23 -0.47" rpy="0 0 0" side="left"/>
+    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_front_right" xyz="0.26 -0.35 -0.47" rpy="0 0 ${-pi}" side="right"/>
+    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_middle_left" xyz="-0.06 0.23 -0.47" rpy="0 0 0" side="left"/>
+    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_middle_right" xyz="-0.06 -0.35 -0.47" rpy="0 0 ${-pi}" side="right"/>
+    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_rear_left" xyz="-0.40 0.23 -0.47" rpy="0 0 0" side="left"/>
+    <xacro:wheel_macro prefix="" parent="base_link" name="wheel_rear_right" xyz="-0.40 -0.35 -0.47" rpy="0 0 ${-pi}" side="right"/>
 
     <xacro:lidar prefix="lidar" parent="base_link">
-        <origin xyz="0.0 -0.61 0.81" rpy="0.0 0.0 0.0"/>
+        <origin xyz="0.29 -0.05 0.13" rpy="0.0 0.0 0.0"/>
     </xacro:lidar>
     <xacro:control>
         <transmissions>
