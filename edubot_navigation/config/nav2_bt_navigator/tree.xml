@@ -1,0 +1,41 @@
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <Timeout msec="60000">
+      <RecoveryNode number_of_retries="2">
+        <PipelineSequence name="NavigateWithReplanning">
+          <RateController hz="1.0">
+            <RecoveryNode number_of_retries="3">
+              <Sequence>
+                <ComputePathToPose goal="{goal}" path="{global_path}"/>
+                <!-- Здесь должен быть узел SmoothPath для сглаживания -->
+                <!-- Здесь должен быть узел IsPathValid для проверки пути -->
+              </Sequence>
+              <Sequence>
+                <BackUp backup_dist="-0.5" backup_speed="0.2" server_name="backup" server_timeout="10"/>
+                <ClearEntireCostmap service_name="global_costmap/clear_entirely_global_costmap"/>
+              </Sequence>
+            </RecoveryNode>
+          </RateController>
+          <Fallback>
+            <RecoveryNode number_of_retries="3">
+              <FollowPath path="{global_path}" controller_id="FollowPath" server_name="follow_path"/>
+              <ClearEntireCostmap service_name="local_costmap/clear_entirely_local_costmap"/>
+            </RecoveryNode>
+            <RecoveryNode number_of_retries="4">
+              <FollowPath path="{global_path}" controller_id="FollowPathMPPI" server_name="follow_path"/>
+              <ClearEntireCostmap service_name="local_costmap/clear_entirely_local_costmap"/>
+            </RecoveryNode>
+          </Fallback>
+        </PipelineSequence>
+        <Sequence>
+          <ClearEntireCostmap service_name="local_costmap/clear_entirely_local_costmap"/>
+          <ClearEntireCostmap service_name="global_costmap/clear_entirely_global_costmap"/>
+          <RateController hz="1.0">
+            <AlwaysSuccess/>
+          </RateController>
+          <BackUp backup_dist="-0.5" backup_speed="0.2" server_name="backup" server_timeout="10"/>
+        </Sequence>
+      </RecoveryNode>
+    </Timeout>
+  </BehaviorTree>
+</root>
