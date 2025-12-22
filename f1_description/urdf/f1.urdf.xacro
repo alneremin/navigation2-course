@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="charli" xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="f1" xmlns:xacro="http://ros.org/wiki/xacro">
   <material name="Black">
     <color rgba="0 0 0 1" />
   </material>
@@ -13,21 +13,23 @@
     <color rgba="1 1 1 1" />
   </material>
 
-  <link name="base_link" />
+  <link name="base_footprint"/>
 
-  <!-- Chassis -->
-  <link name="chassis">
+
+
+
+  <link name="base_link">
     <collision>
       <origin xyz="0 0 0" rpy="0 0 1.57" />
       <geometry>
-				<mesh filename="file://$(find charli)/urdf/meshes/chassis.dae" scale="0.3 0.3 0.3"/>      
+				<mesh filename="file://$(find f1_description)/urdf/meshes/chassis.dae" scale="0.3 0.3 0.3"/>      
       </geometry>
     </collision>
 
     <visual>
       <origin xyz="0 0 0" rpy="0 0 1.57" />
       <geometry>
-				<mesh filename="file://$(find charli)/urdf/meshes/chassis.dae" scale="0.3 0.3 0.3"/>      
+				<mesh filename="file://$(find f1_description)/urdf/meshes/chassis.dae" scale="0.3 0.3 0.3"/>      
       </geometry>
       <!-- <material name="Orange" /> -->
     </visual>
@@ -39,63 +41,63 @@
     </inertial>
   </link>
 
-  <joint name="chassis_joint" type="fixed">
-    <origin xyz="0.8 0 0.5" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="chassis" />
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0.5" rpy="0 0 0"/>
   </joint>
 
   <!-- rear left wheel Link -->
   <link name="rear_left_wheel">
     <collision>
       <geometry>
-				<mesh filename="file://$(find charli)/urdf/meshes/wheel_collision.dae" scale="0.3 0.3 0.3"/>      
+				<mesh filename="file://$(find f1_description)/urdf/meshes/wheel_collision.dae" scale="0.3 0.3 0.3"/>      
       </geometry>
     </collision>
     <visual>
       <geometry>
-				<mesh filename="file://$(find charli)/urdf/meshes/wheel.dae" scale="0.3 0.3 0.3"/>      
+				<mesh filename="file://$(find f1_description)/urdf/meshes/wheel.dae" scale="0.3 0.3 0.3"/>      
       </geometry>
     </visual>
 
     <inertial>
-      <mass value="11.3" />
+      <mass value="1.3" />
       <inertia ixx="0.26" ixy="0.0" ixz="0.0" iyy="0.26" iyz="0.0" izz="0.51" />
     </inertial>
   </link>
 
   <joint name="rear_left_wheel_joint" type="continuous">
     <origin xyz="-0.8 0.65 -0.1" rpy="-1.57 0 0" />
-    <parent link="chassis" />
+    <parent link="base_link" />
     <child link="rear_left_wheel" />
     <axis xyz="0 0 1" />
-    <dynamics damping="0.2" />
+    <dynamics damping="0" />
   </joint>
 
   <!-- rear right wheel Link -->
   <link name="rear_right_wheel">
     <collision>
       <geometry>
-				<mesh filename="file://$(find charli)/urdf/meshes/wheel_collision.dae" scale="0.3 0.3 0.3"/>      
+				<mesh filename="file://$(find f1_description)/urdf/meshes/wheel_collision.dae" scale="0.3 0.3 0.3"/>      
       </geometry>
     </collision>
     <visual>
       <geometry>
-				<mesh filename="file://$(find charli)/urdf/meshes/wheel_1.dae" scale="0.3 0.3 0.3"/>      
+				<mesh filename="file://$(find f1_description)/urdf/meshes/wheel_1.dae" scale="0.3 0.3 0.3"/>      
       </geometry>
     </visual>
     <inertial>
-      <mass value="11.3" />
+      <mass value="1.3" />
       <inertia ixx="0.26" ixy="0.0" ixz="0.0" iyy="0.26" iyz="0.0" izz="0.51" />
     </inertial>
   </link>
 
   <joint name="rear_right_wheel_joint" type="continuous">
     <origin xyz="-0.8 -0.65 -0.1" rpy="-1.57 0 0" />
-    <parent link="chassis" />
+    <parent link="base_link" />
     <child link="rear_right_wheel" />
     <axis xyz="0 0 1" />
-    <dynamics damping="0.2" />
+    <dynamics damping="0" />
   </joint>
 
   <!-- left steer Link -->
@@ -108,10 +110,10 @@
 
   <joint name="left_wheel_steering_joint" type="revolute">
     <origin xyz="1.37 0.65 -0.1" rpy="0 0 0" />
-    <parent link="chassis" />
+    <parent link="base_link" />
     <child link="left_wheel_steering" />
     <axis xyz="0 0 1" />
-    <dynamics damping="0.2" />
+    <dynamics damping="0" />
     <limit effort="1000.0" lower="-0.523599" upper="0.523599" velocity="30"/>
   </joint>
 
@@ -125,10 +127,10 @@
 
   <joint name="right_wheel_steering_joint" type="revolute">
     <origin xyz="1.37 -0.65 -0.1" rpy="0 0 0" />
-    <parent link="chassis" />
+    <parent link="base_link" />
     <child link="right_wheel_steering" />
     <axis xyz="0 0 1" />
-    <dynamics damping="0.2" />
+    <dynamics damping="0" />
     <limit effort="1000.0" lower="-0.523599" upper="0.523599" velocity="30"/>
   </joint>
 
@@ -136,16 +138,16 @@
   <link name="front_left_wheel">
     <collision>
       <geometry>
-				<mesh filename="file://$(find charli)/urdf/meshes/wheel_collision.dae" scale="0.3 0.3 0.3"/>      
+				<mesh filename="file://$(find f1_description)/urdf/meshes/wheel_collision.dae" scale="0.3 0.3 0.3"/>      
       </geometry>
     </collision>
     <visual>
       <geometry>
-				<mesh filename="file://$(find charli)/urdf/meshes/wheel.dae" scale="0.3 0.3 0.3"/>      
+				<mesh filename="file://$(find f1_description)/urdf/meshes/wheel.dae" scale="0.3 0.3 0.3"/>      
       </geometry>
     </visual>
     <inertial>
-      <mass value="11.3" />
+      <mass value="1.3" />
       <inertia ixx="0.26" ixy="0.0" ixz="0.0" iyy="0.26" iyz="0.0" izz="0.51" />
     </inertial>
   </link>
@@ -155,23 +157,23 @@
     <parent link="left_wheel_steering" />
     <child link="front_left_wheel" />
     <axis xyz="0 0 1" />
-    <dynamics damping="0.2" />
+    <dynamics damping="0" />
   </joint>
 
   <!-- front right wheel Link -->
   <link name="front_right_wheel">
     <collision>
       <geometry>
-				<mesh filename="file://$(find charli)/urdf/meshes/wheel_collision.dae" scale="0.3 0.3 0.3"/>      
+				<mesh filename="file://$(find f1_description)/urdf/meshes/wheel_collision.dae" scale="0.3 0.3 0.3"/>      
       </geometry>
     </collision>
     <visual>
       <geometry>
-				<mesh filename="file://$(find charli)/urdf/meshes/wheel_1.dae" scale="0.3 0.3 0.3"/>      
+				<mesh filename="file://$(find f1_description)/urdf/meshes/wheel_1.dae" scale="0.3 0.3 0.3"/>      
       </geometry>
     </visual>
     <inertial>
-      <mass value="11.3" />
+      <mass value="1.3" />
       <inertia ixx="0.26" ixy="0.0" ixz="0.0" iyy="0.26" iyz="0.0" izz="0.51" />
     </inertial>
   </link>
@@ -181,26 +183,26 @@
     <parent link="right_wheel_steering" />
     <child link="front_right_wheel" />
     <axis xyz="0 0 1" />
-    <dynamics damping="0.2" />
+    <dynamics damping="0" />
   </joint>
 
   <joint name="lidar_joint" type="fixed">
     <parent link="base_link"/>
     <child link="lidar_link"/>
-    <origin xyz="2.8 0 0.5" rpy="0 0 0" />
+    <origin xyz="1.8 0 0.5" rpy="0 0 0" />
   </joint>
 
     <link name="lidar_link">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-            <mesh filename="file://$(find charli)/urdf/meshes/hokuyo_urg_04lx_ug01.stl"/>
+            <mesh filename="file://$(find f1_description)/urdf/meshes/hokuyo_urg_04lx_ug01.stl"/>
         </geometry>
       </visual>
       <collision>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
-				<mesh filename="file://$(find charli)/urdf/meshes/hokuyo_urg_04lx_ug01.stl"/>
+				<mesh filename="file://$(find f1_description)/urdf/meshes/hokuyo_urg_04lx_ug01.stl"/>
 			</geometry>
 	  </collision>
       <inertial>
@@ -211,7 +213,6 @@
                  izz="1.0"/>
       </inertial>
     </link>
-
 
   <ros2_control name="GazeboSystem" type="system">
     <hardware>
@@ -245,16 +246,35 @@
     </joint>
   </ros2_control>
 
-  <gazebo>
+  <!-- <gazebo>
     <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-      <parameters>$(find charli)/config/ackermann_drive_controller.yaml</parameters>
+      <parameters>$(find f1_control)/config/ackermann_drive_controller.yaml</parameters>
+      	<ros>
+					<namespace>f1</namespace>
+					<remapping>tf:=/f1/tf</remapping>
+					<remapping>tf_static:=/f1/tf_static</remapping>
+					<remapping>ackermann_steering_controller/odometry:=odom</remapping>
+          			<remapping>ackermann_steering_controller/tf_odometry:=tf</remapping>
+				</ros>
+    </plugin>
+  </gazebo> -->
+
+    <gazebo>
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(find f1_control)/config/ackermann_drive_controller.yaml</parameters>
+      	<ros>
+					<namespace>f1</namespace>
+					<remapping>ackermann_steering_controller/odometry:=odom</remapping>
+          <remapping>ackermann_steering_controller/tf_odometry:=tf</remapping>
+          <parameter name="robot_description">robot_description</parameter>
+				</ros>
     </plugin>
   </gazebo>
 
 	<gazebo reference="lidar_link">
 			<sensor name='lidar' type='gpu_lidar'>
 				<gz_frame_id>lidar_link</gz_frame_id>
-				<topic>scan</topic>
+				<topic>/f1/scan</topic>
 				<update_rate>10</update_rate>
 				<ray>
 					<scan>
@@ -280,5 +300,16 @@
 				<alwaysOn>true</alwaysOn>
 				<visualize>true</visualize>
 			</sensor>
-		</gazebo>
+	</gazebo>
+
+  <gazebo reference="rear_left_wheel">
+    <mu1>1.2</mu1>
+    <mu2>1.2</mu2>
+  </gazebo>
+
+  <gazebo reference="rear_right_wheel">
+    <mu1>1.2</mu1>
+    <mu2>1.2</mu2>
+  </gazebo>
+
 </robot>
