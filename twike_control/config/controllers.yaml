@@ -25,4 +25,4 @@
     base_frame_id: base_footprint
     wheelbase: 0.4
     traction_wheels_radius: 0.1
-    traction_track_width: 0.3
+    traction_track_width: 0.4
