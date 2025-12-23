@@ -1,23 +1,46 @@
 <root main_tree_to_execute="MainTree">
   <BehaviorTree ID="MainTree">
+
     <RecoveryNode number_of_retries="2" name="NavigateRecovery">
+
       <PipelineSequence name="NavigateWithDynamicPlanning">
-        
-        <RateController hz="5.0">
+
+        <SpeedController
+          min_rate="1.0"
+          max_rate="5.0"
+          min_speed="0.0"
+          max_speed="1.0">
+
           <Fallback name="GlobalPlanningProcess">
-            <Sequence name="ComputeAndValidatePath">
-              <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased" server_timeout="2.0"/>
-              <IsPathValid path="{path}"/> 
+
+            <Sequence name="ComputeValidateAndSmoothPath">
+              <ComputePathToPose
+                  goal="{goal}"
+                  path="{path}"
+                  planner_id="GridBased"
+                  server_timeout="2.0"/>
+              <IsPathValid path="{path}"/>
+              <SmoothPath path="{path}" smoother_id="SimpleSmoother"/>
             </Sequence>
-            
+
             <RetryUntilSuccessful num_attempts="2">
               <Sequence name="ClearingSequence">
-                <ClearEntireCostmap name="ClearGlobalCostmap" service_name="global_costmap/clear_entirely_global_costmap"/>
-                <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+                <ClearEntireCostmap
+                    name="ClearGlobalCostmap"
+                    service_name="global_costmap/clear_entirely_global_costmap"/>
+                <ComputePathToPose
+                    goal="{goal}"
+                    path="{path}"
+                    planner_id="GridBased"
+                    server_timeout="2.0"/>
+                <IsPathValid path="{path}"/>
+                <SmoothPath path="{path}" smoother_id="SimpleSmoother"/>
               </Sequence>
             </RetryUntilSuccessful>
+
           </Fallback>
-        </RateController>
+
+        </SpeedController>
 
         <Fallback name="LocalControlFallback">
           <FollowPath path="{path}" controller_id="MPPI"/>
@@ -26,17 +49,27 @@
 
       </PipelineSequence>
 
-      <Sequence name="RecoveryActions">
-        <ClearEntireCostmap name="ClearLocalCostmap" service_name="local_costmap/clear_entirely_local_costmap"/>
-        <ClearEntireCostmap name="ClearGlobalCostmap" service_name="global_costmap/clear_entirely_global_costmap"/>
-        <Wait wait_duration="1.0"/>
-        <BackUp backup_dist="0.2" backup_speed="0.1"/>
-        
-        <DistanceController distance="1.0">
-             <AlwaysSuccess/>
-        </DistanceController>
-      </Sequence>
+      <Fallback name="RecoveryOrFinish">
+
+        <Sequence name="RecoveryActions">
+          <GoalReached distance="1.0" operator=">"/>
+
+          <ClearEntireCostmap
+              name="ClearLocalCostmap"
+              service_name="local_costmap/clear_entirely_local_costmap"/>
+          <ClearEntireCostmap
+              name="ClearGlobalCostmap"
+              service_name="global_costmap/clear_entirely_global_costmap"/>
+
+          <Wait wait_duration="1.0"/>
+          <BackUp backup_dist="0.2" backup_speed="0.1"/>
+        </Sequence>
+
+        <AlwaysSuccess/>
+
+      </Fallback>
+
     </RecoveryNode>
+
   </BehaviorTree>
 </root>
-
