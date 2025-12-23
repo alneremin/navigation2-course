@@ -1,29 +1,75 @@
-<root main_tree_to_execute="MainTree">
+<root main_tree_to_execute="MainTree" BTCPP_format="4">
+
   <BehaviorTree ID="MainTree">
-    <RecoveryNode number_of_retries="5">
+
+    <RecoveryNode number_of_retries="4">
+
+      <!-- ===== ОСНОВНОЙ PIPELINE ===== -->
       <PipelineSequence name="NavigateWithReplanning">
+
+        <!-- === ГЛОБАЛЬНОЕ ПЛАНИРОВАНИЕ === -->
         <RateController hz="1.0">
-          <RecoveryNode number_of_retries="2">
-            <ComputePathToPose goal="{goal}" path="{path}"/>
-            <ClearEntireCostmap service_name="local_costmap/clear_entirely_local_costmap"/>
+          <RecoveryNode number_of_retries="3">
+
+            <ComputePathToPose
+                goal="{goal}"
+                path="{path}"
+                planner_id="GridBased"/>
+
+            <ClearEntireCostmap
+                service_name="global_costmap/clear_entirely_global_costmap"/>
+
           </RecoveryNode>
         </RateController>
+
+        <!-- === ЛОКАЛЬНОЕ СЛЕДОВАНИЕ === -->
         <Fallback>
-          <RecoveryNode number_of_retries="0">
-            <FollowPath path="{path}" controller_id="DWB" server_name="follow_path"/>
-            <ClearEntireCostmap service_name="global_costmap/clear_entirely_global_costmap"/>
+
+          <!-- Основной MPPI -->
+          <RecoveryNode number_of_retries="1">
+            <FollowPath
+                path="{path}"
+                controller_id="MPPI"
+                server_name="follow_path"/>
+
+            <ClearEntireCostmap
+                service_name="global_costmap/clear_entirely_global_costmap"/>
           </RecoveryNode>
-          <RecoveryNode number_of_retries="2">
-            <FollowPath path="{path}" controller_id="MPPI" server_name="follow_path"/>
-            <ClearEntireCostmap service_name="global_costmap/clear_entirely_global_costmap"/>
+
+          <!-- Медленный MPPI -->
+          <RecoveryNode number_of_retries="1">
+            <FollowPath
+                path="{path}"
+                controller_id="MPPI_SLOW"
+                server_name="follow_path"/>
+
+            <ClearEntireCostmap
+                service_name="global_costmap/clear_entirely_global_costmap"/>
           </RecoveryNode>
+
         </Fallback>
+
       </PipelineSequence>
-      <Sequence>
-        <ClearEntireCostmap service_name="local_costmap/clear_entirely_local_costmap"/>
-        <ClearEntireCostmap service_name="global_costmap/clear_entirely_global_costmap"/>
-        <BackUp backup_dist="0.4" backup_speed="0.1" server_name="backup" server_timeout="10"/>
+
+      <!-- === RECOVERY === -->
+      <Sequence name="RecoveryActions">
+
+        <ClearEntireCostmap
+            service_name="local_costmap/clear_entirely_local_costmap"/>
+
+        <ClearEntireCostmap
+            service_name="global_costmap/clear_entirely_global_costmap"/>
+
+        <BackUp
+            backup_dist="0.5"
+            backup_speed="0.1"
+            server_name="backup"
+            server_timeout="10"/>
+
       </Sequence>
+
     </RecoveryNode>
+
   </BehaviorTree>
+
 </root>

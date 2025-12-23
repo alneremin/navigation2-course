@@ -67,8 +67,8 @@ global_costmap:
       inflation_layer:
         plugin: nav2_costmap_2d::InflationLayer
         enabled: true
-        inflation_radius: 0.30
-        cost_scaling_factor: 1.0
+        inflation_radius: 0.45
+        cost_scaling_factor: 2.0
         inflate_unknown: false
         inflate_around_unknown: true
       static_layer:
@@ -80,77 +80,97 @@ global_costmap:
       always_send_full_costmap: true
 
 controller_server:
-    ros__parameters:
-      enable_stamped_cmd_vel: true # для публикации TwistStamped
-      use_sim_time: True
-      controller_frequency: 20.0
-      min_x_velocity_threshold: 0.001
-      min_y_velocity_threshold: 0.001
-      min_theta_velocity_threshold: 0.001
-      failure_tolerance: 0.3
-      odom_topic: /f1/odom
-      progress_checker_plugins: ["progress_checker"]
-      goal_checker_plugins: ["goal_checker"]
-      controller_plugins: ["MPPI"]
-      use_realtime_priority: false
-      progress_checker:
-        plugin: nav2_controller::SimpleProgressChecker
-        required_movement_radius: 0.5
-        movement_time_allowance: 10.0
-      goal_checker:
-        plugin: "nav2_controller::SimpleGoalChecker"
-        xy_goal_tolerance: 0.25
-        yaw_goal_tolerance: 3.14
-        stateful: True
+  ros__parameters:
+    enable_stamped_cmd_vel: true
+    use_sim_time: True
+    controller_frequency: 20.0
+    min_x_velocity_threshold: 0.001
+    min_y_velocity_threshold: 0.001
+    min_theta_velocity_threshold: 0.001
+    failure_tolerance: 0.3
+    odom_topic: /f1/odom
 
-      MPPI:
-        plugin: "nav2_mppi_controller::MPPIController"
-        visualize: true
+    progress_checker_plugins: ["progress_checker"]
+    goal_checker_plugins: ["goal_checker"]
 
-        # минимальные и максимальные скорости по осям X, Y и оси вращения Z
-        vx_max: 0.3
-        vx_min: -0.3
-        vy_max: 0.3
-        wz_max: 1.0
+    controller_plugins: ["MPPI", "MPPI_SLOW"]
 
-        # минимальные и максимальные значения ускорения и торможения робота
-        ax_max: 3.0
-        ax_min: -3.0
-        ay_max: 0.0
-        ay_min: 0.0
-        az_max: 3.2
+    progress_checker:
+      plugin: nav2_controller::SimpleProgressChecker
+      required_movement_radius: 0.5
+      movement_time_allowance: 10.0
 
-        # параметры для генерации скоростей
-        time_steps: 56
-        model_dt: 0.05
-        batch_size: 2000
-        vx_std: 0.1
-        vy_std: 0.1
-        wz_std: 0.3
-        iteration_count: 1
+    goal_checker:
+      plugin: "nav2_controller::SimpleGoalChecker"
+      xy_goal_tolerance: 0.25
+      yaw_goal_tolerance: 3.14
+      stateful: True
 
-        #
-        prune_distance: 1.7
-        transform_tolerance: 0.1
-        motion_model: "Ackermann"
-        AckermannConstraints:
-          min_turning_r: 0.72
+    MPPI:
+      plugin: "nav2_mppi_controller::MPPIController"
+      visualize: true
+      vx_max: 0.3
+      vx_min: -0.3
+      vy_max: 0.3
+      wz_max: 1.0
+      ax_max: 3.0
+      ax_min: -3.0
+      az_max: 3.2
+      time_steps: 56
+      model_dt: 0.05
+      batch_size: 2000
+      vx_std: 0.1
+      vy_std: 0.1
+      wz_std: 0.3
+      iteration_count: 1
+      prune_distance: 1.7
+      transform_tolerance: 0.1
+      motion_model: "Ackermann"
+      AckermannConstraints:
+        min_turning_r: 0.72
+      temperature: 0.3
+      gamma: 0.015
+      critics: ["ConstraintCritic",
+                "GoalCritic",
+                "GoalAngleCritic",
+                "PathAlignCritic",
+                "PathFollowCritic",
+                "PathAngleCritic"]
+      ConstraintCritic.cost_weight: 4.0
+      GoalCritic.cost_weight: 5.0
+      GoalAngleCritic.cost_weight: 3.0
+      PathAlignCritic.cost_weight: 14.0
+      PathFollowCritic.cost_weight: 5.0
+      PathAngleCritic.cost_weight: 2.0
 
-        # оптимизация
-        temperature: 0.3
-        gamma: 0.015
-        critics: ["ConstraintCritic", 
-                  "GoalCritic", 
-                  "GoalAngleCritic", 
-                  "PathAlignCritic", 
-                  "PathFollowCritic",
-                  "PathAngleCritic"]
-        ConstraintCritic.cost_weight: 4.0
-        GoalCritic.cost_weight: 5.0
-        GoalAngleCritic.cost_weight: 3.0
-        PathAlignCritic.cost_weight: 14.0
-        PathFollowCritic.cost_weight: 5.0
-        PathAngleCritic.cost_weight: 2.0
+    MPPI_SLOW:
+      plugin: "nav2_mppi_controller::MPPIController"
+      visualize: false
+      vx_max: 0.15          
+      vx_min: -0.15
+      vy_max: 0.0
+      wz_max: 0.7
+      ax_max: 2.0
+      ax_min: -2.0
+      az_max: 2.0
+      time_steps: 56
+      model_dt: 0.05
+      batch_size: 2000
+      vx_std: 0.05
+      vy_std: 0.0
+      wz_std: 0.2
+      iteration_count: 1
+      prune_distance: 1.7
+      transform_tolerance: 0.1
+      motion_model: "Ackermann"
+      AckermannConstraints:
+        min_turning_r: 0.9   
+      temperature: 0.5
+      gamma: 0.02
+      critics: ["ConstraintCritic",
+                "GoalCritic",
+                "PathAlignCritic",
+                "PathFollowCritic"]
 
 local_costmap:
   local_costmap:
@@ -186,15 +206,15 @@ local_costmap:
       inflation_layer:
         plugin: nav2_costmap_2d::InflationLayer
         enabled: true
-        inflation_radius: 0.30
-        cost_scaling_factor: 1.0
+        inflation_radius: 0.45
+        cost_scaling_factor: 2.0
         inflate_unknown: false
         inflate_around_unknown: true
       always_send_full_costmap: true
 
 behavior_server:
     ros__parameters:
-      enable_stamped_cmd_vel: true # для публикации TwistStamped
+      enable_stamped_cmd_vel: true
       use_sim_time: True
       local_costmap_topic: local_costmap/costmap_raw
       global_costmap_topic: global_costmap/costmap_raw
