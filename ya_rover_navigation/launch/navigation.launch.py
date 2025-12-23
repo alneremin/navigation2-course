@@ -33,7 +33,7 @@ def generate_launch_description():
 
     declare_params_file_cmd = DeclareLaunchArgument(
         name='params_file',
-        default_value=os.path.join(get_package_share_directory("ya_rover_navigation"), "config", "new_navigation.yaml"),
+        default_value=os.path.join(get_package_share_directory("ya_rover_navigation"), "config", "navigation_with_b.yaml"),
         description='Localization pamareters in yaml file to load'
     )
 

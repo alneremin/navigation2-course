@@ -1,0 +1,61 @@
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <RecoveryNode number_of_retries="1" name="BigRecovery">
+
+    <!-- Outer Loop: Retries the whole mission 4 times if RecoveryMode executes -->
+    <RecoveryNode number_of_retries="4" name="MainRecovery">
+      
+      <!-- MAIN NAVIGATION BLOCK -->
+      <Sequence>
+        <ReactiveFallback name="DistanceGuard">
+          
+          <!-- Condition 1: If distance > 2m, interrupt and return to start -->
+          <Sequence name="ReturnToStartIfTooFar">
+             <DistanceTraveled distance="2.0" global_frame="odom" robot_base_frame="base_footprint"/>
+             <NavigateToPose goal="{start_pose}"/>
+          </Sequence>
+          
+          <!-- Condition 2: Normal Navigation (Interruptible) -->
+          <PipelineSequence name="NavigationWithRecovery">
+            
+            <!-- Global Planner: Retries 3 times before failing to outer recovery -->
+            <RateController hz="1.0">
+            <Fallback>
+
+              <RecoveryNode number_of_retries="3" name="GlobalPathPlanning">
+                
+                <!-- Try Planner A, then Planner B -->
+                <Fallback name="TryBothPlanners">
+                  <ComputePathToPose goal="{goal}" path="{path}" planner_id="SmacHybrid"/>
+                  <ComputePathToPose goal="{goal}" path="{path}" planner_id="NavFn"/>
+                </Fallback>
+                
+                <!-- "Recovery" for planner: Just wait/fail to increment retry count. 
+                     Only after 3 fails does it exit this node and trigger outer RecoveryMode. -->
+                <AlwaysFailure/>
+              </RecoveryNode>
+              </Fallback>
+            </RateController>
+            
+            <!-- Local Path Following: 5 retries with costmap clearing -->
+            <RecoveryNode number_of_retries="5" name="LocalPathFollowing">
+              <FollowPath path="{path}" controller_id="DWB"/>
+              <ClearCostmapAroundRobot reset_distance="1.0" service_name="local_costmap/clear_around_local_costmap"/>
+            </RecoveryNode>
+            
+          </PipelineSequence>
+        </ReactiveFallback>
+      </Sequence>
+      <Wait wait_duration="0.5"/>
+    </RecoveryNode>
+          <!-- RECOVERY MODE: Executes only if Global Planner fails 3x OR Local Planner fails 5x -->
+      <Sequence name="RecoveryMode">
+        <ClearEntireCostmap service_name="local_costmap/clear_entirely_local_costmap"/>
+        <ClearEntireCostmap service_name="global_costmap/clear_entirely_global_costmap"/>
+        <Spin spin_dist="3.14159" time_allowance="10.0"/>
+        <DriveOnHeading dist_to_travel="0.2" speed="0.1" time_allowance="10.0"/>
+      </Sequence>
+    </RecoveryNode>
+
+  </BehaviorTree>
+</root>

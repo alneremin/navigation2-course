@@ -25,8 +25,8 @@ diff_drive_controller:
       joint_wheel_middle_right,
       joint_wheel_rear_right
     ]
-    wheel_separation: 0.7
-    wheel_radius: 0.2
+    wheel_separation: 0.58
+    wheel_radius: 0.12
     publish_rate: 50.0
     base_frame_id: base_footprint
     odom_frame_id: odom

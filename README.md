@@ -40,3 +40,16 @@
     - отображение в rviz
 - `ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p stamped:=True`
     - управление в teleop
+
+# Homework 3 - Behavior tree
+## Запуск симуляции 
+- `ros2 launch ya_rover_gazebo final_gazebo.launch.py` 
+    - запуск gazebo
+- `ros2 launch ya_rover_control control.launch.py` 
+    - запуск котроллеров
+- `ros2 launch ya_rover_navigation localization.launch.py`
+    - запуск локализации
+- `ros2 launch ya_rover_navigation navigation.launch.py`
+    - запуск навигации
+- `ros2 launch ya_rover_navigation display_rviz.launch.py`
+    - отображение в rviz
