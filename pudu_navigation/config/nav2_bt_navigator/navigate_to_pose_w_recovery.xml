@@ -20,7 +20,7 @@
                   planner_id="GridBased"
                   server_timeout="2.0"/>
               <IsPathValid path="{path}"/>
-              <SmoothPath path="{path}" smoother_id="SimpleSmoother"/>
+              <SmoothPath unsmoothed_path="{path}" smoothed_path="{path}" smoother_id="simple_smoother"/>
             </Sequence>
 
             <RetryUntilSuccessful num_attempts="2">
@@ -34,7 +34,7 @@
                     planner_id="GridBased"
                     server_timeout="2.0"/>
                 <IsPathValid path="{path}"/>
-                <SmoothPath path="{path}" smoother_id="SimpleSmoother"/>
+                <SmoothPath unsmoothed_path="{path}" smoothed_path="{path}" smoother_id="simple_smoother"/>
               </Sequence>
             </RetryUntilSuccessful>
 
