@@ -52,7 +52,7 @@
       <Fallback name="RecoveryOrFinish">
 
         <Sequence name="RecoveryActions">
-          <GoalReached distance="1.0" operator=">"/>
+          <GoalReached/>
 
           <ClearEntireCostmap
               name="ClearLocalCostmap"
